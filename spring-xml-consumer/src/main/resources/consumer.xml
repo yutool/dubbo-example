@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd        http://dubbo.apache.org/schema/dubbo        http://dubbo.apache.org/schema/dubbo/dubbo.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:component-scan base-package="com.ankoye.dubbo.service.impl" />
+
+    <!-- 消费方应用名，用于计算依赖关系，不是匹配条件，不要与提供方一样 -->
+    <dubbo:application name="spring-xml-consumer" />
+
+    <!-- zookeeper -->
+    <dubbo:registry address="zookeeper://127.0.0.1:2181" />
+
+    <!-- 生成远程服务代理，引用Service 可以和本地bean一样使用providerService
+        version=* 代表随意调用
+        stub 本地存根（参数验证、本地缓存）
+    -->
+    <dubbo:reference id="providerService" interface="com.ankoye.dubbo.service.ProviderService"
+                     version="*" stub="com.ankoye.dubbo.service.ProviderServiceStub" />
+
+    <!-- 监控中心 -->
+    <dubbo:monitor protocol="registry" />
+<!--    <dubbo:monitor address="127.0.0.1:7070" />-->
+
+    <!-- 配置当前消费者规则 测试 -->
+    <dubbo:consumer check="false" />
+
+    <!-- 配置注册中心的规则 测试 -->
+    <dubbo:registry check="false"/>
+</beans>
